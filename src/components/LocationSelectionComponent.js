@@ -10,49 +10,29 @@ class LocationSelectionComponent extends Component {
    */
   constructor(props) {
     super(props);
-    this.state = {
-      cityState: "",
-      citiesInState: [],
-      selectedCity: ""
-    };
 
-    this.handleCityStateChange = this.handleCityStateChange.bind(this);
+    this.handleUSStateChange = this.handleUSStateChange.bind(this);
     this.handleCityChange = this.handleCityChange.bind(this);
   }
 
   /**
-   * Let us set the state partially based on state value.
-   */
-  componentWillMount() {
-    const stateEntries = getUSStateAbbreviations();
-    const cityEntries = getUniqueCitiesForThisState(stateEntries[0]);
-    this.setState({
-      cityState: stateEntries[0],
-      citiesInState: cityEntries,
-      selectedCity: cityEntries[0]
-    });
-  }
-
-  /**
    * Handler method for onChange event on State select element.
+   * We can now call the event handler being set on 'onUSStateChange'
+   * prop of component. Handler has been set under WeatherAppComponent.
    * @param event onChnage event object emitted by select.
    */
-  handleCityStateChange(event) {
-    const cityStateValue = event.target.value;
-    const cityEntries = getUniqueCitiesForThisState(cityStateValue);
-    this.setState({
-      cityState: event.target.value,
-      citiesInState: cityEntries,
-      selectedCity: cityEntries[0]
-    });
+  handleUSStateChange(event) {
+    this.props.onUSStateChange(event.target.value);
   }
 
   /**
    * Handler method for onChange event on City select element.
+   * We can now call the event handler being set on 'onCityChange'
+   * prop of component. Handler has been set under WeatherAppComponent.
    * @param event onChnage event object emitted by select.
    */
   handleCityChange(event) {
-    this.setState({selectedCity: event.target.value});
+    this.props.onCityChange(event.target.value);
   }
 
   /**
@@ -60,14 +40,15 @@ class LocationSelectionComponent extends Component {
    * @param event onChnage event object emitted by select.
    */
   renderCitySelect() {
-    const selectedCity = this.state.selectedCity;
-    const citiesInState = this.state.citiesInState;
+    const cityInState = this.props.cityInState;
+    const usState = this.props.usState;
+    const citiesInState = getUniqueCitiesForThisState(usState);
     const createCityOptions = (city) => {
       return <option key={city.toLowerCase()} value={city.toLowerCase()}>{city}</option>;
     };
     return (
       <select
-        value={selectedCity}
+        value={cityInState}
         onChange={this.handleCityChange}
       >
         {citiesInState.map(createCityOptions)}
@@ -80,27 +61,29 @@ class LocationSelectionComponent extends Component {
    * @param event onChnage event object emitted by select.
    */
   renderStateSelect() {
-    const cityState = this.state.cityState;
-    const stateEntries = getUSStateAbbreviations();
-    const createStateOptions = (usState) => {
+    const usState = this.props.usState;
+    const allUSStateAbbreviations = getUSStateAbbreviations();
+    const createUSStateOptions = (usState) => {
       return <option key={usState.toLowerCase()} value={usState.toLowerCase()}>{usState}</option>;
     };
     return (
       <select
-        value={cityState}
-        onChange={this.handleCityStateChange}
+        value={usState}
+        onChange={this.handleUSStateChange}
       >
-        {stateEntries.map(createStateOptions)}
+        {allUSStateAbbreviations.map(createUSStateOptions)}
       </select>
     );
   }
 
+  /**
+   * Render method to render both US State and Cities in State dropdowns.
+   */
   render() {
     return (
       <div>
         {this.renderStateSelect()}
         {this.renderCitySelect()}
-        <p>At present the State and City are {this.state.cityState} :: {this.state.selectedCity}.</p>
       </div>
     );
   }
