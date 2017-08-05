@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { getUniqueCitiesForThisState } from '../util/fetch_states_cities';
+import { getUniqueCitiesForThisState, getUSStateAbbreviations } from '../util/fetch_states_cities';
 
 class LocationSelectionComponent extends Component {
 
@@ -11,7 +11,7 @@ class LocationSelectionComponent extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      cityState: "ca",
+      cityState: "",
       citiesInState: [],
       selectedCity: ""
     };
@@ -24,8 +24,10 @@ class LocationSelectionComponent extends Component {
    * Let us set the state partially based on state value.
    */
   componentWillMount() {
-    const cityEntries = getUniqueCitiesForThisState(this.state.cityState);
+    const stateEntries = getUSStateAbbreviations();
+    const cityEntries = getUniqueCitiesForThisState(stateEntries[0]);
     this.setState({
+      cityState: stateEntries[0],
       citiesInState: cityEntries,
       selectedCity: cityEntries[0]
     });
@@ -63,25 +65,42 @@ class LocationSelectionComponent extends Component {
     const createCityOptions = (city) => {
       return <option key={city.toLowerCase()} value={city.toLowerCase()}>{city}</option>;
     };
-    return (<select
-            value={selectedCity}
-            onChange={this.handleCityChange}
-          >
-            {citiesInState.map(createCityOptions)}
-          </select>);
+    return (
+      <select
+        value={selectedCity}
+        onChange={this.handleCityChange}
+      >
+        {citiesInState.map(createCityOptions)}
+      </select>
+    );
+  }
+
+  /**
+   * Sub-render method to render State select element.
+   * @param event onChnage event object emitted by select.
+   */
+  renderStateSelect() {
+    const cityState = this.state.cityState;
+    const stateEntries = getUSStateAbbreviations();
+    const createStateOptions = (usState) => {
+      return <option key={usState.toLowerCase()} value={usState.toLowerCase()}>{usState}</option>;
+    };
+    return (
+      <select
+        value={cityState}
+        onChange={this.handleCityStateChange}
+      >
+        {stateEntries.map(createStateOptions)}
+      </select>
+    );
   }
 
   render() {
     return (
       <div>
-        <select value={this.state.cityState} onChange={this.handleCityStateChange}>
-          <option value="az">AZ</option>
-          <option value="tx">TX</option>
-          <option value="ca">CA</option>
-          <option value="ny">NY</option>
-        </select>
+        {this.renderStateSelect()}
         {this.renderCitySelect()}
-        <p>At present the city is {this.state.selectedCity}</p>
+        <p>At present the State and City are {this.state.cityState} :: {this.state.selectedCity}.</p>
       </div>
     );
   }

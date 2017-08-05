@@ -1,3 +1,5 @@
+import { usStateAbbr } from './us_states';
+
 const cities = require("cities");
 
 /**
@@ -11,6 +13,14 @@ function getCityEntriesForState(stateAbbr) {
     cityEntries.push(allEntries[i].city);
   }
   return cityEntries;
+}
+
+/**
+ * Function to get US State Abbreviations that can be used later.
+ * Just got the state abbreviations and stored it in separate module.
+ */
+export function getUSStateAbbreviations() {
+  return usStateAbbr;
 }
 
 /**
