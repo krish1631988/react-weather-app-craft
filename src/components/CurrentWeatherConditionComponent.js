@@ -4,7 +4,12 @@ class CurrentWeatherConditionComponent extends Component {
   render() {
     return (
       <div>
-        <p>CurrentWeatherConditionComponent to present current condition.</p>
+        <div>
+          <h1>At present</h1>
+        </div>
+        <div>
+          <h2>{this.props.currentTemp} F</h2>
+        </div>
       </div>
     );
   }

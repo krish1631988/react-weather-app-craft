@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { isTodaysDate } from '../util/date_utils';
 
 import CurrentWeatherConditionComponent from './CurrentWeatherConditionComponent';
 import FormattedDateComponent from './FormattedDateComponent';
@@ -11,13 +12,20 @@ class WeatherTileComponent extends Component {
       highInCelcius: '23',
       lowInFnarenheit: '56',
       lowInCelcius: '13',
-      descriptionText: 'Sunny'
+      descriptionText: 'Sunny',
+      currentTemp: '57',
+      date: '06 Aug 2017'
     };
-    
+
     return (
       <div>
-        <CurrentWeatherConditionComponent />
-        <FormattedDateComponent date={new Date()}/>
+        {
+          isTodaysDate(temperature.date) &&
+          <CurrentWeatherConditionComponent
+            currentTemp={temperature.currentTemp}
+          />
+        }
+        <FormattedDateComponent date={temperature.date}/>
         <TemperatureDescriptionComponent temperature={temperature}/>
       </div>
     );
