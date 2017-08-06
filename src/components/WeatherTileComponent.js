@@ -9,7 +9,7 @@ class WeatherTileComponent extends Component {
     return (
       <div>
         <CurrentWeatherConditionComponent />
-        <FormattedDateComponent />
+        <FormattedDateComponent date={new Date()}/>
         <TemperatureDescriptionComponent />
       </div>
     );
