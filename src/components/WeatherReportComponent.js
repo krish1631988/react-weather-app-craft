@@ -1,85 +1,29 @@
 import React, { Component } from 'react';
 import { getForecastForLocation } from '../util/weather_forecast';
+import { dummyWeatherForecast } from '../util/dummy_weather_data';
 
 import WeatherTileComponent from './WeatherTileComponent';
 
 class WeatherReportComponent extends Component {
   constructor(props) {
     super(props);
+    const location = this.props.location;
+    const forecastForLocation = getForecastForLocation(dummyWeatherForecast, location);
+    const currentWeatherForecast = [];
+    currentWeatherForecast.push(forecastForLocation);
     this.state = {
-      weatherForecast: [
-        {
-          location: 'sunnyvale, ca',
-          forecast: [
-            {
-              high: '74',
-              low: '56',
-              descriptionText: 'Cloudy',
-              currentTemp: '57',
-              date: '06 Aug 2017'
-            },
-            {
-              high: '82',
-              low: '68',
-              descriptionText: 'Sunny',
-              currentTemp: '50',
-              date: '07 Aug 2017'
-            }
-          ]
-        },
-        {
-          location: 'fremont, ca',
-          forecast: [
-            {
-              high: '94',
-              low: '68',
-              descriptionText: 'Sunny',
-              currentTemp: '67',
-              date: '06 Aug 2017'
-            },
-            {
-              high: '56',
-              low: '50',
-              descriptionText: 'Rainy',
-              currentTemp: '51',
-              date: '07 Aug 2017'
-            }
-          ]
-        }
-      ]
+      weatherForecast: currentWeatherForecast
     };
   }
 
-  updateWeatherForecastData(pLocation) {
-    const weatherForecast = this.state.weatherForecast;
-    const forecastForLocation = {
-      location: pLocation,
-      forecast: [
-        {
-          high: '94',
-          low: '68',
-          descriptionText: 'Sunny',
-          currentTemp: '67',
-          date: '06 Aug 2017'
-        },
-        {
-          high: '56',
-          low: '50',
-          descriptionText: 'Rainy',
-          currentTemp: '51',
-          date: '07 Aug 2017'
-        }
-      ]
-    };
-    weatherForecast.push(forecastForLocation)
-    this.setState({weatherForecast: weatherForecast});
-  }
-
-  componentWillMount() {
-    // const location = this.props.location;
-    // if (location === 'fremont, ca') {
-    //   this.updateWeatherForecastData(location);
-    // }
+  componentWillReceiveProps(nextProps) {
+    const location = nextProps.location;
+    const forecastForLocation = getForecastForLocation(dummyWeatherForecast, location);
+    const currentWeatherForecast = this.state.weatherForecast;
+    currentWeatherForecast.push(forecastForLocation);
+    this.setState({
+      weatherForecast: currentWeatherForecast
+    });
   }
 
   render() {
