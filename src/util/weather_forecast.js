@@ -45,8 +45,8 @@ export const weatherForecast = [
  * @param pDateStr Date string passed.
  * @return forecastForDay forecast object representing the given date.
  */
-export function getForecastForLocation(pLocationStr) {
-  const forecastForLocation = weatherForecast.find(
+export function getForecastForLocation(pWeatherForecastState, pLocationStr) {
+  const forecastForLocation = pWeatherForecastState.find(
     function(pWeatherForecaseObject){
       return pWeatherForecaseObject.location === pLocationStr;
     }

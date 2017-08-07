@@ -7,26 +7,17 @@ import TemperatureDescriptionComponent from './TemperatureDescriptionComponent';
 
 class WeatherTileComponent extends Component {
   render() {
-    const temperature = {
-      highInFnarenheit: '74',
-      highInCelcius: '23',
-      lowInFnarenheit: '56',
-      lowInCelcius: '13',
-      descriptionText: 'Sunny',
-      currentTemp: '57',
-      date: '06 Aug 2017'
-    };
-
+    const forecast = this.props.forecast;
     return (
       <div>
         {
-          isTodaysDate(temperature.date) &&
+          isTodaysDate(forecast.date) &&
           <CurrentWeatherConditionComponent
-            currentTemp={temperature.currentTemp}
+            currentTemp={forecast.currentTemp}
           />
         }
-        <FormattedDateComponent date={temperature.date}/>
-        <TemperatureDescriptionComponent temperature={temperature}/>
+        <FormattedDateComponent date={forecast.date}/>
+        <TemperatureDescriptionComponent temperature={forecast}/>
       </div>
     );
   }

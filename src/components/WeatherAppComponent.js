@@ -40,6 +40,7 @@ class WeatherAppComponent extends Component {
    * Render method to render LocationSelectionComponent and WeatherReportComponent.
    */
   render() {
+    const location = `${this.state.cityInState}, ${this.state.usState}`;
     return (
       <div>
         <LocationSelectionComponent
@@ -48,7 +49,7 @@ class WeatherAppComponent extends Component {
           onUSStateChange={this.handleUSStateChange}
           onCityChange={this.handleCityChange}
         />
-        <WeatherReportComponent />
+        <WeatherReportComponent location={location}/>
       </div>
     );
   }
