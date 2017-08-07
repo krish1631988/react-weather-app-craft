@@ -1,3 +1,18 @@
+const weatherForecastCache = [];
+const citiesChecked = [];
+
+export function getWeatherForecastCache() {
+  return weatherForecastCache;
+}
+
+export function updateWeatherForecastCache(pWeatherForecaseObject) {
+  weatherForecastCache.push(pWeatherForecaseObject);
+}
+
+export function getCitiesChecked() {
+  return citiesChecked;
+}
+
 /**
  * Method to get the weather forecast object
  * @param pForecastForLocation WeatherForecastObject for the location.
@@ -11,6 +26,15 @@ export function getForecastForLocation(pWeatherForecastState, pLocationStr) {
     }
   );
   return forecastForLocation;
+}
+
+export function isForcastForLocationAvailable(pWeatherForecastState, pLocationStr) {
+  const forecastForLocation = pWeatherForecastState.find(
+    function(pWeatherForecaseObject){
+      return pWeatherForecaseObject.location === pLocationStr;
+    }
+  );
+  return forecastForLocation ? true : false;
 }
 
 /**
