@@ -1,40 +1,32 @@
-const weatherForecastCache = [];
-const citiesChecked = [];
-
-export function getWeatherForecastCache() {
-  return weatherForecastCache;
-}
-
-export function updateWeatherForecastCache(pWeatherForecaseObject) {
-  weatherForecastCache.push(pWeatherForecaseObject);
-}
-
-export function getCitiesChecked() {
-  return citiesChecked;
+/**
+ * Method to get the weather forecast object for a location from cache.
+ * @param pWeatherForecastCache WeatherForecast cache..
+ * @param pLocation Location string.
+ * @return lForecastForLocation Forecast object for given location.
+ */
+export function getForecastForLocation(pWeatherForecastCache, pLocation) {
+  const lForecastForLocation = pWeatherForecastCache.find(
+    function(pWeatherForecaseObject){
+      return pWeatherForecaseObject.location === pLocation;
+    }
+  );
+  return lForecastForLocation;
 }
 
 /**
- * Method to get the weather forecast object
- * @param pForecastForLocation WeatherForecastObject for the location.
- * @param pDateStr Date string passed.
- * @return forecastForDay forecast object representing the given date.
+ * Verification method to check if weather forecast for a location exists
+ * in cache.
+ * @param pWeatherForecastCache cache of forecasts.
+ * @param pLocation location string.
+ * @return boolean True if forecast exists.
  */
-export function getForecastForLocation(pWeatherForecastState, pLocationStr) {
-  const forecastForLocation = pWeatherForecastState.find(
-    function(pWeatherForecaseObject){
-      return pWeatherForecaseObject.location === pLocationStr;
+export function isForcastForLocationAvailable(pWeatherForecastCache, pLocation) {
+  const lForecastForLocation = pWeatherForecastCache.find(
+    function(pWeatherForcastObject){
+      return pWeatherForcastObject.location === pLocation;
     }
   );
-  return forecastForLocation;
-}
-
-export function isForcastForLocationAvailable(pWeatherForecastState, pLocationStr) {
-  const forecastForLocation = pWeatherForecastState.find(
-    function(pWeatherForecaseObject){
-      return pWeatherForecaseObject.location === pLocationStr;
-    }
-  );
-  return forecastForLocation ? true : false;
+  return lForecastForLocation ? true : false;
 }
 
 /**
@@ -42,14 +34,14 @@ export function isForcastForLocationAvailable(pWeatherForecastState, pLocationSt
  * We first get the weather forcast object matching the location and then
  * we try to fetch the forecast object matching a particular date.
  * @param pForecastForLocation WeatherForecastObject for the location.
- * @param pDateStr Date string passed.
- * @return forecastForDay forecast object representing the given date.
+ * @param pDate Date string passed.
+ * @return lForecastForDay forecast object representing the given date.
  */
-export function getForecastForDay(pForecastForLocation, pDateStr) {
-  const forecastForDay = pForecastForLocation.forecast.find(
+export function getForecastForDay(pForecastForLocation, pDate) {
+  const lForecastForDay = pForecastForLocation.forecast.find(
     function(pForecastObject){
-      return pForecastObject.date === pDateStr;
+      return pForecastObject.date === pDate;
     }
   );
-  return forecastForDay;
+  return lForecastForDay;
 }

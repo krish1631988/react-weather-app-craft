@@ -1,105 +1,118 @@
 import React, { Component } from 'react';
-import { getForecastForLocation } from '../util/weather_forecast';
-//import { dummyWeatherForecast } from '../util/dummy_weather_data';
-import axios from 'axios';
 
+import { getForecastForLocation } from '../util/weather_forecast';
+import { fetchWeatherForecastForLocation } from '../util/api_interaction';
 import WeatherTileComponent from './WeatherTileComponent';
 
 class WeatherReportComponent extends Component {
   constructor(props) {
     super(props);
-    // const location = this.props.location;
-    // const forecastForLocation = getForecastForLocation(dummyWeatherForecast, location);
-    // const currentWeatherForecast = [];
-    // currentWeatherForecast.push(forecastForLocation);
     this.state = {
-      weatherForecast: []
+      weatherForecastCache: []
     };
   }
 
-  // componentWillReceiveProps(nextProps) {
-  //   const location = nextProps.location;
-  //   const forecastForLocation = getForecastForLocation(dummyWeatherForecast, location);
-  //   const currentWeatherForecast = this.state.weatherForecast;
-  //   currentWeatherForecast.push(forecastForLocation);
-  //   this.setState({
-  //     weatherForecast: currentWeatherForecast
-  //   });
-  // }
+  /**
+   * Method to construct the forecast object which would be consisting of
+   * 10 day forecast along with location and current temp.
+   * @param pLocation Location string.
+   * @param pItem Query Item from response.
+   * @return lWeatherForecastObject Weather forcast object for given location.
+   */
+  constructWeatherForecastObject(pLocation, pItem) {
+    let lWeatherForecastObject;
+    let lForecastFor10Days = [];
+    const lTemp = pItem.condition.temp;
+    pItem.forecast.forEach(function(pForecastForDay) {
+      lForecastFor10Days.push(pForecastForDay);
+    });
+    lWeatherForecastObject = {
+      location: pLocation,
+      currentTemp: lTemp,
+      forecast: lForecastFor10Days
+    };
 
+    return lWeatherForecastObject;
+  }
+
+  /**
+   * Method to update the cache for weather forecast under state.
+   * @param pWeatherForecastCache Cache of forecasts for different locations.
+   */
+  updateWeatherForecastCache(pWeatherForecastCache) {
+    this.setState({
+      weatherForecastCache: pWeatherForecastCache
+    });
+  }
+
+  /**
+   * When component mounts, we want to make fetch call again.
+   * But let us make sure to check cache first to avoid extra call.
+   */
   componentDidMount() {
-    const locationStr = this.props.location;
-    const url = `https://query.yahooapis.com/v1/public/yql?q=select item from weather.forecast where woeid in (select woeid from geo.places(1) where text='${this.props.location}')&format=json`;
+    const lLocation = this.props.location;
     const self = this;
-    axios.get(url).then(function(response) {
-      const temp = response.data.query.results.channel.item.condition.temp;
-      let fetchedWeatherForecast = [];
-      let weatherForecastObj;
-      let forecastFor10Days = [];
-      let forecastForDay;
-      for(var i=0; i<response.data.query.results.channel.item.forecast.length; i++) {
-        forecastForDay = response.data.query.results.channel.item.forecast[i];
-        forecastFor10Days.push(forecastForDay);
-      }
-      weatherForecastObj = {
-        location: locationStr,
-        currentTemp: temp,
-        forecast: forecastFor10Days
-      };
-      fetchedWeatherForecast.push(weatherForecastObj);
-      self.setState({
-        weatherForecast: fetchedWeatherForecast
-      });
+    fetchWeatherForecastForLocation(lLocation).then(function(response) {
+      let lFetchedWeatherForecast = [];
+      let lWeatherForecastObject = self.constructWeatherForecastObject(lLocation, response.data.query.results.channel.item);
+      lFetchedWeatherForecast.push(lWeatherForecastObject);
+      self.updateWeatherForecastCache(lFetchedWeatherForecast);
     });
   }
 
+  /**
+   * When we recieve prop or when prop changes, we want to make fetch call again.
+   * But let us make sure to check cache first to avoid extra call.
+   * @param nextProps next set of props passed to component.
+   */
   componentWillReceiveProps(nextProps) {
-    const locationStr = nextProps.location;
-    const url = `https://query.yahooapis.com/v1/public/yql?q=select item from weather.forecast where woeid in (select woeid from geo.places(1) where text='${nextProps.location}')&format=json`;
+    const lLocation = nextProps.location;
     const self = this;
-    axios.get(url).then(function(response) {
-      const temp = response.data.query.results.channel.item.condition.temp;
-      let fetchedWeatherForecast = [];
-      let weatherForecastObj;
-      let forecastFor10Days = [];
-      let forecastForDay;
-      for(var i=0; i<response.data.query.results.channel.item.forecast.length; i++) {
-        forecastForDay = response.data.query.results.channel.item.forecast[i];
-        forecastFor10Days.push(forecastForDay);
-      }
-      weatherForecastObj = {
-        location: locationStr,
-        currentTemp: temp,
-        forecast: forecastFor10Days
-      };
-      fetchedWeatherForecast.push(weatherForecastObj);
-      self.setState({
-        weatherForecast: fetchedWeatherForecast
-      });
+    fetchWeatherForecastForLocation(lLocation).then(function(response) {
+      let lFetchedWeatherForecast = [];
+      let lWeatherForecastObject = self.constructWeatherForecastObject(lLocation, response.data.query.results.channel.item);
+      lFetchedWeatherForecast.push(lWeatherForecastObject);
+      self.updateWeatherForecastCache(lFetchedWeatherForecast);
     });
   }
 
-  render() {
-    const locationStr = this.props.location;
-    const weatherForecast = this.state.weatherForecast;
-    let forecastForLocation;
-    let forecastFor10Days = [];
-    let weatherTiles;
-    if(weatherForecast.length > 0) {
-      forecastForLocation = getForecastForLocation(weatherForecast, locationStr);
-      if (forecastForLocation) {
-        forecastFor10Days = forecastForLocation.forecast;
-        weatherTiles = forecastFor10Days.map(function(forecastForDay){
+  /**
+   * Actual render method to render weather tiles. Before we render, we would
+   * read the weather forcast details from our cache maintained under state.
+   */
+  renderWeatherTiles() {
+    const lLocation = this.props.location;
+    const lWeatherForecastCache = this.state.weatherForecastCache;
+    let lForecastForLocation;
+    let lForecastFor10Days = [];
+    let lWeatherTiles;
+
+    // Let us make sure we do have data as we proceed.
+    if(lWeatherForecastCache.length > 0) {
+      lForecastForLocation = getForecastForLocation(lWeatherForecastCache, lLocation);
+
+      // To avoid race condition let us be certain we do have forecastForLocation.
+      if (lForecastForLocation) {
+        lForecastFor10Days = lForecastForLocation.forecast;
+
+        // Let us iterate and map the forecast details to create tiles.
+        lWeatherTiles = lForecastFor10Days.map(function(pForecastForDay){
           return (
-            <div key={forecastForDay.date}>
-              <WeatherTileComponent forecast={forecastForDay} />
+            <div key={pForecastForDay.date}>
+              <WeatherTileComponent forecast={pForecastForDay} />
             </div>
           );
         })
       }
     }
+    return <div>{lWeatherTiles}</div>;
+  }
 
-    return <div>{weatherTiles}</div>;
+  /**
+   * Simple render method to just render all the tiles for 10 day forecast.
+   */
+  render() {
+    return this.renderWeatherTiles();
   }
 }
 
