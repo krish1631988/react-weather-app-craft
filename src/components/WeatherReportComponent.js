@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import { getForecastForLocation } from '../util/weather_forecast';
+import { getForecastForLocation, isForcastForLocationAvailable } from '../util/weather_forecast';
 import { fetchWeatherForecastForLocation } from '../util/api_interaction';
 import WeatherTileComponent from './WeatherTileComponent';
 
@@ -51,13 +51,31 @@ class WeatherReportComponent extends Component {
    */
   componentDidMount() {
     const lLocation = this.props.location;
+    if (!isForcastForLocationAvailable(this.state.weatherForecastCache, lLocation)) {
+      const self = this;
+      fetchWeatherForecastForLocation(lLocation).then(function(response) {
+        let lFetchedWeatherForecast = self.state.weatherForecastCache;
+        let lWeatherForecastObject = self.constructWeatherForecastObject(lLocation, response.data.query.results.channel.item);
+        lFetchedWeatherForecast.push(lWeatherForecastObject);
+        self.updateWeatherForecastCache(lFetchedWeatherForecast);
+      });
+    }
+
+    // Let us clear cache after some time duration so as we get updated data.
+    // Note that, as the state gets updated, component would render and again
+    // componentDidMount would get called.
     const self = this;
-    fetchWeatherForecastForLocation(lLocation).then(function(response) {
-      let lFetchedWeatherForecast = [];
-      let lWeatherForecastObject = self.constructWeatherForecastObject(lLocation, response.data.query.results.channel.item);
-      lFetchedWeatherForecast.push(lWeatherForecastObject);
-      self.updateWeatherForecastCache(lFetchedWeatherForecast);
-    });
+    setInterval(function() {
+      self.setState({
+        weatherForecastCache: []
+      });
+      fetchWeatherForecastForLocation(lLocation).then(function(response) {
+        let lFetchedWeatherForecast = self.state.weatherForecastCache;
+        let lWeatherForecastObject = self.constructWeatherForecastObject(lLocation, response.data.query.results.channel.item);
+        lFetchedWeatherForecast.push(lWeatherForecastObject);
+        self.updateWeatherForecastCache(lFetchedWeatherForecast);
+      });
+    }, (1000*60*1));
   }
 
   /**
@@ -67,13 +85,15 @@ class WeatherReportComponent extends Component {
    */
   componentWillReceiveProps(nextProps) {
     const lLocation = nextProps.location;
-    const self = this;
-    fetchWeatherForecastForLocation(lLocation).then(function(response) {
-      let lFetchedWeatherForecast = [];
-      let lWeatherForecastObject = self.constructWeatherForecastObject(lLocation, response.data.query.results.channel.item);
-      lFetchedWeatherForecast.push(lWeatherForecastObject);
-      self.updateWeatherForecastCache(lFetchedWeatherForecast);
-    });
+    if (!isForcastForLocationAvailable(this.state.weatherForecastCache, lLocation)) {
+      const self = this;
+      fetchWeatherForecastForLocation(lLocation).then(function(response) {
+        let lFetchedWeatherForecast = self.state.weatherForecastCache;
+        let lWeatherForecastObject = self.constructWeatherForecastObject(lLocation, response.data.query.results.channel.item);
+        lFetchedWeatherForecast.push(lWeatherForecastObject);
+        self.updateWeatherForecastCache(lFetchedWeatherForecast);
+      });
+    }
   }
 
   /**
