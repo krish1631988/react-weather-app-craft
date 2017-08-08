@@ -1,0 +1,14 @@
+.formatted-date {
+  width: inherit;
+  height: 20px;
+}
+
+.formatted-date-text {
+  font-size: 14px;
+}
+
+@media screen and (max-width:780px){
+  .formatted-date {
+    width: 100%;
+  }
+}

@@ -13,9 +13,6 @@ class App extends Component {
           <img src={logo} className="App-logo" alt="logo" />
           <h1> Weather Report app based on React</h1>
         </div>
-        <p className="App-intro">
-          Start by selecting a location of interest.
-        </p>
         <WeatherAppComponent />
       </div>
     );

@@ -5,6 +5,8 @@ import { fetchWeatherForecastForLocation } from '../util/api_interaction';
 import { isTodaysDate } from '../util/date_utils';
 import WeatherTileComponent from './WeatherTileComponent';
 
+import '../style/WeatherReportComponent.css';
+
 class WeatherReportComponent extends Component {
   constructor(props) {
     super(props);
@@ -135,7 +137,7 @@ class WeatherReportComponent extends Component {
         })
       }
     }
-    return <div>{lWeatherTiles}</div>;
+    return <div className = "weather-report">{lWeatherTiles}</div>;
   }
 
   /**

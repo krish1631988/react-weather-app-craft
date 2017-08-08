@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 
 import { isTodaysDate } from '../util/date_utils';
 
+import '../style/TemperatureDescriptionComponent.css';
+
 class TemperatureDescriptionComponent extends Component {
 
   /**
@@ -17,29 +19,29 @@ class TemperatureDescriptionComponent extends Component {
       `http://l.yimg.com/a/i/us/we/52/${currentTempCode}.gif` :
       `http://l.yimg.com/a/i/us/we/52/${forecast.code}.gif`;
     return (
-      <div>
+      <div className="temperature-wrapper-div">
         {
           isTodaysDate(forecast.date) ?
-          <div>
-            <p>
+          <div className="temperature-description">
+            <p className="current-temperature-number">
               <strong>Temp : </strong> {currentTemp} F
             </p>
-            <p>
+            <p className="current-temperature-description">
               {currentTempDescription}
               <img src={tmpImgSrcUrl} />
             </p>
-            <p>
+            <p className="current-temperature-high-low">
               <strong> High : </strong> {forecast.high} F
               <strong> Low : </strong> {forecast.low} F
             </p>
           </div>
         :
-          <div>
-            <p>
+          <div className="temperate-description">
+            <p className="other-temperature-description">
               {forecast.text}
               <img src={tmpImgSrcUrl} />
             </p>
-            <p>
+            <p className="other-temperature-high-low">
               <strong> High : </strong> {forecast.high} F
               <strong> Low : </strong> {forecast.low} F
             </p>

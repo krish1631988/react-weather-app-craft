@@ -1,0 +1,48 @@
+.location-widgets {
+  align-items: auto;
+  align-self: auto;
+  align-content: auto;
+}
+
+.state-select {
+  display: inline-block;
+  box-sizing: border-box;
+  position: relative;
+  width: 100px;
+  height: 34px;
+  color: #B8B8B8;
+  caret-color: auto;
+  border-radius: 2px;
+  border: 1px solid #babec5;
+  padding: 0 6px 0 0;
+  margin-top: 20px;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  font-family: sans-serif;
+  background-color: #ffffff;
+  text-decoration-color: #000000;
+  align-self: auto;
+}
+
+.city-select {
+  display: inline-block;
+  box-sizing: border-box;
+  position: relative;
+  width: 200px;
+  height: 34px;
+  color: #B8B8B8;
+  caret-color: auto;
+  border-radius: 2px;
+  border: 1px solid #babec5;
+  padding: 0 6px 0 0;
+  margin-left: 20px;
+  margin-top: 20px;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  font-family: sans-serif;
+  background-color: #ffffff;
+  text-decoration-color: #000000;
+  align-self: auto;
+}

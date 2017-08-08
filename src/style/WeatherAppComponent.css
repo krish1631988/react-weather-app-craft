@@ -1,0 +1,13 @@
+.weather-app {
+  width:inherit;
+  height: auto;
+}
+
+.app-intro {
+  font-size: large;
+  text-align: center;
+}
+
+.location-selection-component {
+  align-self: center;
+}

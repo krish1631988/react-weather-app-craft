@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
 
+import { getUniqueCitiesForThisState } from '../util/fetch_states_cities';
 import LocationSelectionComponent from './LocationSelectionComponent';
 import WeatherReportComponent from './WeatherReportComponent';
+
+import '../style/WeatherAppComponent.css';
 
 class WeatherAppComponent extends Component {
 
@@ -25,7 +28,11 @@ class WeatherAppComponent extends Component {
    * @param pStateStr State string sent by LocationSelectionComponent.
    */
   handleUSStateChange(pStateStr) {
-    this.setState({usState: pStateStr});
+    const citiesInState = getUniqueCitiesForThisState(pStateStr)
+    this.setState({
+      usState: pStateStr,
+      cityInState: citiesInState[0]
+    });
   }
 
   /**
@@ -42,8 +49,12 @@ class WeatherAppComponent extends Component {
   render() {
     const location = `${this.state.cityInState}, ${this.state.usState}`;
     return (
-      <div>
+      <div className="weather-app">
+        <p className="app-intro">
+          Start by selecting a location of interest.
+        </p>
         <LocationSelectionComponent
+          className="location-selection-component"
           usState={this.state.usState}
           cityInState={this.state.cityInState}
           onUSStateChange={this.handleUSStateChange}

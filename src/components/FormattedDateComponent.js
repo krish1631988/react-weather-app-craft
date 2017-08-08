@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
+
 import { getFormattedDate } from '../util/date_utils';
+
+import '../style/FormattedDateComponent.css';
 
 class FormattedDateComponent extends Component {
 
@@ -10,8 +13,8 @@ class FormattedDateComponent extends Component {
   render() {
     const formattedDate = getFormattedDate(this.props.date);
     return (
-      <div>
-        <h1>{formattedDate}</h1>
+      <div className="formatted-date">
+        <h3 className="formatted-date-text">{formattedDate}</h3>
       </div>
     );
   }

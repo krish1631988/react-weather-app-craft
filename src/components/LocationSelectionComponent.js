@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { getUniqueCitiesForThisState, getUSStateAbbreviations } from '../util/fetch_states_cities';
 
+import '../style/LocationSelectionComponent.css';
+
 class LocationSelectionComponent extends Component {
 
   /**
@@ -48,6 +50,7 @@ class LocationSelectionComponent extends Component {
     };
     return (
       <select
+        className = "city-select"
         value={cityInState}
         onChange={this.handleCityChange}
       >
@@ -68,6 +71,7 @@ class LocationSelectionComponent extends Component {
     };
     return (
       <select
+        className = "state-select"
         value={usState}
         onChange={this.handleUSStateChange}
       >
@@ -81,7 +85,7 @@ class LocationSelectionComponent extends Component {
    */
   render() {
     return (
-      <div>
+      <div className = "location-widgets">
         {this.renderStateSelect()}
         {this.renderCitySelect()}
       </div>
