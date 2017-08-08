@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 import { getForecastForLocation, isForcastForLocationAvailable } from '../util/weather_forecast';
 import { fetchWeatherForecastForLocation } from '../util/api_interaction';
+import { isTodaysDate } from '../util/date_utils';
 import WeatherTileComponent from './WeatherTileComponent';
 
 class WeatherReportComponent extends Component {
@@ -23,12 +24,16 @@ class WeatherReportComponent extends Component {
     let lWeatherForecastObject;
     let lForecastFor10Days = [];
     const lTemp = pItem.condition.temp;
+    const lTempCode = pItem.condition.code;
+    const lTempDesc = pItem.condition.text;
     pItem.forecast.forEach(function(pForecastForDay) {
       lForecastFor10Days.push(pForecastForDay);
     });
     lWeatherForecastObject = {
       location: pLocation,
       currentTemp: lTemp,
+      currentTempCode: lTempCode,
+      currentTempDescription: lTempDesc,
       forecast: lForecastFor10Days
     };
 
@@ -75,7 +80,7 @@ class WeatherReportComponent extends Component {
         lFetchedWeatherForecast.push(lWeatherForecastObject);
         self.updateWeatherForecastCache(lFetchedWeatherForecast);
       });
-    }, (1000*60*1));
+    }, (1000*60*5));
   }
 
   /**
@@ -119,7 +124,12 @@ class WeatherReportComponent extends Component {
         lWeatherTiles = lForecastFor10Days.map(function(pForecastForDay){
           return (
             <div key={pForecastForDay.date}>
-              <WeatherTileComponent forecast={pForecastForDay} />
+              <WeatherTileComponent
+                currentTemp = { isTodaysDate(pForecastForDay.date) ? lForecastForLocation.currentTemp : null }
+                currentTempCode = { isTodaysDate(pForecastForDay.date) ? lForecastForLocation.currentTempCode : null }
+                currentTempDescription = { isTodaysDate(pForecastForDay.date) ? lForecastForLocation.currentTempDescription : null }
+                forecast={pForecastForDay}
+              />
             </div>
           );
         })
