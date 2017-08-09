@@ -43,7 +43,9 @@ class LocationSelectionComponent extends Component {
    */
   renderCitySelect() {
     const cityInState = this.props.cityInState;
+    //const cityInState = localStorage.getItem('cityInState');
     const usState = this.props.usState;
+    //const usState = localStorage.getItem('usState');
     const citiesInState = getUniqueCitiesForThisState(usState);
     const createCityOptions = (city) => {
       return <option key={city.toLowerCase()} value={city.toLowerCase()}>{city}</option>;
@@ -65,6 +67,7 @@ class LocationSelectionComponent extends Component {
    */
   renderStateSelect() {
     const usState = this.props.usState;
+    //const usState = localStorage.getItem('usState');
     const allUSStateAbbreviations = getUSStateAbbreviations();
     const createUSStateOptions = (usState) => {
       return <option key={usState.toLowerCase()} value={usState.toLowerCase()}>{usState}</option>;

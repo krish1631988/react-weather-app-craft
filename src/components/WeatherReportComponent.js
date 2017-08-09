@@ -76,9 +76,10 @@ class WeatherReportComponent extends Component {
       self.setState({
         weatherForecastCache: []
       });
-      fetchWeatherForecastForLocation(lLocation).then(function(data) {
+      const currentLocation = `${localStorage.getItem('cityInState')}, ${localStorage.getItem('usState')}`;
+      fetchWeatherForecastForLocation(currentLocation).then(function(data) {
         let lFetchedWeatherForecast = self.state.weatherForecastCache;
-        let lWeatherForecastObject = self.constructWeatherForecastObject(lLocation, data.query.results.channel.item);
+        let lWeatherForecastObject = self.constructWeatherForecastObject(currentLocation, data.query.results.channel.item);
         lFetchedWeatherForecast.push(lWeatherForecastObject);
         self.updateWeatherForecastCache(lFetchedWeatherForecast);
       });

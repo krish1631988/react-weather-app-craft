@@ -15,9 +15,19 @@ class WeatherAppComponent extends Component {
    */
   constructor(props) {
     super(props);
+    let usState, cityInState;
+    if (localStorage.getItem('usState') && localStorage.getItem('cityInState')) {
+      usState = localStorage.getItem('usState');
+      cityInState = localStorage.getItem('cityInState');
+    }
+    // this.state = {
+    //   usState: "ca",
+    //   cityInState: "sunnyvale"
+    // };
+
     this.state = {
-      usState: "ca",
-      cityInState: "sunnyvale"
+      usState: usState,
+      cityInState: cityInState
     };
     this.handleUSStateChange = this.handleUSStateChange.bind(this);
     this.handleCityChange = this.handleCityChange.bind(this);
@@ -33,6 +43,17 @@ class WeatherAppComponent extends Component {
       usState: pStateStr,
       cityInState: citiesInState[0]
     });
+    localStorage.setItem('usState', pStateStr);
+    localStorage.setItem('cityInState', citiesInState[0]);
+
+    // If location selection changes in another tab, we should account for that.
+    // const self = this;
+    // setInterval(function() {
+    //   self.setState({
+    //     usState: localStorage.getItem('usState'),
+    //     cityInState: localStorage.getItem('cityInState')
+    //   });
+    // }, 2000);
   }
 
   /**
@@ -41,6 +62,7 @@ class WeatherAppComponent extends Component {
    */
   handleCityChange(pCityStr) {
     this.setState({cityInState: pCityStr});
+    localStorage.setItem('cityInState', pCityStr);
   }
 
   /**
