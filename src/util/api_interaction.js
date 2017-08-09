@@ -1,4 +1,4 @@
-import axios from 'axios';
+import 'whatwg-fetch';
 
 /**
  * Method to just construct and return the queryURL to be used
@@ -12,10 +12,13 @@ function getQueryURL(pLocation) {
 }
 
 /**
- * Method that would make service call using axios library.
+ * Method that would make service call using fetch API.
+ * NOTE: We are using 'whatwg-fetch' which is basically a window.fetch polyfill.
  * @param pLocation Location string.
  * @return ES6 promise constaining the response json.
  */
 export function fetchWeatherForecastForLocation(pLocation) {
-  return axios.get(getQueryURL(pLocation));
+  return fetch(getQueryURL(pLocation)).then(function(response) {
+    return response.json();
+  });
 }

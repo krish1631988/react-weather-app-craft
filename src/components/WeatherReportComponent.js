@@ -60,9 +60,9 @@ class WeatherReportComponent extends Component {
     const lLocation = this.props.location;
     if (!isForcastForLocationAvailable(this.state.weatherForecastCache, lLocation)) {
       const self = this;
-      fetchWeatherForecastForLocation(lLocation).then(function(response) {
+      fetchWeatherForecastForLocation(lLocation).then(function(data) {
         let lFetchedWeatherForecast = self.state.weatherForecastCache;
-        let lWeatherForecastObject = self.constructWeatherForecastObject(lLocation, response.data.query.results.channel.item);
+        let lWeatherForecastObject = self.constructWeatherForecastObject(lLocation, data.query.results.channel.item);
         lFetchedWeatherForecast.push(lWeatherForecastObject);
         self.updateWeatherForecastCache(lFetchedWeatherForecast);
       });
@@ -76,9 +76,9 @@ class WeatherReportComponent extends Component {
       self.setState({
         weatherForecastCache: []
       });
-      fetchWeatherForecastForLocation(lLocation).then(function(response) {
+      fetchWeatherForecastForLocation(lLocation).then(function(data) {
         let lFetchedWeatherForecast = self.state.weatherForecastCache;
-        let lWeatherForecastObject = self.constructWeatherForecastObject(lLocation, response.data.query.results.channel.item);
+        let lWeatherForecastObject = self.constructWeatherForecastObject(lLocation, data.query.results.channel.item);
         lFetchedWeatherForecast.push(lWeatherForecastObject);
         self.updateWeatherForecastCache(lFetchedWeatherForecast);
       });
@@ -94,9 +94,9 @@ class WeatherReportComponent extends Component {
     const lLocation = nextProps.location;
     if (!isForcastForLocationAvailable(this.state.weatherForecastCache, lLocation)) {
       const self = this;
-      fetchWeatherForecastForLocation(lLocation).then(function(response) {
+      fetchWeatherForecastForLocation(lLocation).then(function(data) {
         let lFetchedWeatherForecast = self.state.weatherForecastCache;
-        let lWeatherForecastObject = self.constructWeatherForecastObject(lLocation, response.data.query.results.channel.item);
+        let lWeatherForecastObject = self.constructWeatherForecastObject(lLocation, data.query.results.channel.item);
         lFetchedWeatherForecast.push(lWeatherForecastObject);
         self.updateWeatherForecastCache(lFetchedWeatherForecast);
       });
